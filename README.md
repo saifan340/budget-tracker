@@ -4,12 +4,6 @@ A full-stack web application to track your personal income and expenses. Built w
 
 ---
 
-## 📸 Screenshot
-
-> _Add a screenshot of your app here_
-
----
-
 ## 📋 Description
 
 Budget Tracker is a personal finance management app that allows users to:
