@@ -1,63 +1,50 @@
 name: Budget Tracker CI
 
 on:
-    push:
-      branches: [main, develop]
-    pull_request:
-      branches: [main]
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
 
 jobs:
-    #----- Backend: Python / Flask ---------
-    Backend-tests:
-      name: Backend Tests
-      runs-on: ubuntu-latest
+  backend-tests:
+    name: Backend Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-      steps:
-        - name: Checkout code
-          uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
 
-        - name: Set up Python
-          uses: actions/setup-python@v5
-          with:
-            python-version: '3.11'
+      - name: Install dependencies
+        working-directory: ./backend
+        run: |
+          pip install -r requirements.txt
+          pip install pytest flake8
 
-        - name: Install dependencies
-          working-directory: ./backend
-          run: |
-            pip install -r requirements.txt
-            pip install pytest flake8
+      - name: Lint
+        working-directory: ./backend
+        run: flake8 . --max-line-length=100 --exclude=venv
 
-        - name: Lint with flack8
-          working-directory: ./backend
-          run: flake8 . --max-line-length=100 --exclude=venv
+      - name: Run tests
+        working-directory: ./backend
+        run: pytest --tb=short
 
-        - name: Run tests
-          working-directory: ./backend
-          run: pytest --tb=short
+  frontend-build:
+    name: Frontend Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-    #----- Frontend: React ---------
-    Frontend-tests:
-      name: Frontend Build
-      runs-on: ubuntu-latest
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
 
-      steps:
-        - name: Checkout code
-          uses: actions/checkout@v4
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: npm ci
 
-        - name: Set up Node.js
-          uses: actions/setup-node@v4
-          with:
-            node-version: '20
-            cache: 'npm'
-            cache-dependency-path: frontend/package-lock.json
-
-        - name: Install dependencies
-          working-directory: ./frontend
-          run: npm ci
-
-        - name: Run Build
-          working-directory: ./frontend
-          run: npm run build
-
-
-
+      - name: Build
+        working-directory: ./frontend
+        run: npm run build
