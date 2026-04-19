@@ -1,3 +1,4 @@
+![CI](https://github.com/saifan340/budget-tracker/actions/workflows/ci.yml/badge.svg)
 # 💰 Budget Tracker
 
 A full-stack web application to track your personal income and expenses. Built with React and Python Flask.
