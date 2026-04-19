@@ -21,6 +21,8 @@ def init_db():
                 ''')
     conn.commit()
     conn.close()
+def test-placeholder():
+    assert True 
     
 # retrieve all transactions
 @app.route('/transactions', methods=['GET'])
@@ -68,7 +70,7 @@ def add_transaction():
 def delete_transaction(id):
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
-    c.execute(' DELETE FROM transactions WHERE id = ?', (id))
+    c.execute('DELETE FROM transactions WHERE id = ?', (int(id),))
     conn.commit()
     conn.close()
     return jsonify({'message': 'transaction deleted!'})
