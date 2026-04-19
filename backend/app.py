@@ -21,9 +21,7 @@ def init_db():
                 ''')
     conn.commit()
     conn.close()
-def test-placeholder():
-    assert True 
-    
+
 # retrieve all transactions
 @app.route('/transactions', methods=['GET'])
 def get_transactions():
