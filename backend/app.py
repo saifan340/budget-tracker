@@ -6,6 +6,8 @@ from datetime import datetime
 app = Flask(__name__)
 CORS(app) 
 
+VALID_TYPES = ['income', 'expense']
+
 def init_db():
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
@@ -22,7 +24,7 @@ def init_db():
     conn.commit()
     conn.close()
 
-# retrieve all transactions
+# --GET /transactions ----------------------------
 @app.route('/transactions', methods=['GET'])
 def get_transactions():
     conn = sqlite3.connect('database.db')
@@ -43,10 +45,32 @@ def get_transactions():
         })
     return jsonify(transactions)
 
-# add new transaction
+# --POST /transaction ----------------------------
 @app.route('/transactions', methods=['POST'])
 def add_transaction():
     data = request.json
+    
+    #--validation--
+    if not data:
+        return jsonify({'error': 'No data provided'}), 400
+    
+    if 'type' not in data or not data['type']:
+        return jsonify({'error': 'type is required'}), 400
+    
+    if data['type'] not in VALID_TYPES:
+        return jsonify({'error': f'type must be one of {VALID_TYPES}'}), 400
+    
+    if 'amount' not in data or data['amount'] is None:
+        return jsonify({'error': 'amount is required'}), 400
+    
+    if not isinstance(data['amount'], (int, float)) or data['amount'] <= 0:
+        return jsonify({'error': 'amount must be a positive number'}), 400
+    
+    if 'catagory' not in data or not data['category']:
+        return jsonify({'error': 'category is required'}), 400
+    # --- end validation --
+    
+    
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
     c.execute('''
@@ -63,18 +87,27 @@ def add_transaction():
     conn.close()
     return jsonify({'message': 'Transation gespeichert!'}), 201
 
-# delete transaction
+# --- Delete /transactions/<id> -----------------
 @app.route('/transactions/<int:id>', methods =['DELETE'])
 def delete_transaction(id):
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
-    c.execute('DELETE FROM transactions WHERE id = ?', (int(id),))
+    
+    # check if transaction exists first 
+    c.execute('SELECT id FROM transactions WHERE id = ?', (id,))
+    transaction = c.fetchone()
+    
+    if not transaction:
+        conn.close()
+        return jsonify({'error': 'Transaction not found'}), 404
+    
+    
+    c.execute('DELETE FROM transactions WHERE id = ?', (id,))
     conn.commit()
     conn.close()
     return jsonify({'message': 'transaction deleted!'})
 if __name__ == '__main__':
     init_db()
-    #yapp.run(debug=True)
     app.run(debug=True, port=8000)
     
     
