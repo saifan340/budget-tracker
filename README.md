@@ -1,31 +1,31 @@
-![CI](https://github.com/saifan340/budget-tracker/actions/workflows/ci.yml/badge.svg)
 # 💰 Budget Tracker
 
-A full-stack web application to track your personal income and expenses. Built with React and Python Flask.
+![CI](https://github.com/saifan340/budget-tracker/actions/workflows/ci.yml/badge.svg)
+![React](https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=black)
+![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white)
+![Flask](https://img.shields.io/badge/Flask-000000?style=flat&logo=flask&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-003B57?style=flat&logo=sqlite&logoColor=white)
+
+![demo](budget-tracker-demo.gif)
+
+A full-stack web application to track personal income and expenses. Built with React and Python Flask.
 
 ---
 
-## 📋 Description
+## ✨ Features
 
-Budget Tracker is a personal finance management app that allows users to:
 - Add income and expense transactions
-- Organize transactions by category (Food, Rent, Transport, etc.)
-- Automatically calculate and display the current balance
+- Organize by category (Food, Rent, Transport, etc.)
+- Live balance calculation with color feedback
 - Delete transactions
 
 ---
 
 ## 🛠️ Technologies
 
-**Frontend:**
-- React
-- Axios
+**Frontend:** React · Axios
 
-**Backend:**
-- Python
-- Flask
-- Flask-CORS
-- SQLite
+**Backend:** Python · Flask · Flask-CORS · SQLite
 
 ---
 
@@ -62,7 +62,7 @@ Frontend runs on: `http://localhost:3000`
 
 ---
 
-## 🚀 Future Features
+## 🚀 Planned Features
 
 - [ ] AI-powered spending analysis using GenAI
 - [ ] Charts and data visualization
@@ -72,6 +72,6 @@ Frontend runs on: `http://localhost:3000`
 
 ---
 
-## 👨‍💻 Author
+## 👩‍💻 Author
 
-**Saifan** — [github.com/saifan340](https://github.com/saifan340)
+**Saifan** — [GitHub](https://github.com/saifan340) · [LinkedIn](https://linkedin.com/in/saifan-aremenak)

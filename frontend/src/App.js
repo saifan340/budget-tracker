@@ -27,10 +27,20 @@ function App() {
   // Neue Transaktion speichern
   const handleSubmit = async () => {
     if (!form.amount) return alert("Bitte Betrag eingeben!");
-    await axios.post(`${API}/transactions`, form);
+    
+    const typeMap = {
+        'ausgabe': 'expense',
+        'einnahme': 'income'
+    }
+
+    await axios.post(`${API}/transactions`, {
+        ...form,
+        type: typeMap[form.type]
+    });
+
     setForm({ type: "ausgabe", amount: "", category: "Essen", description: "" });
     fetchTransactions();
-  };
+};
 
   // Transaktion löschen
   const handleDelete = async (id) => {
@@ -40,8 +50,8 @@ function App() {
 
   // Bilanz berechnen
   const balance = transactions.reduce((sum, t) => {
-    return t.type === "einnahme" ? sum + t.amount : sum - t.amount;
-  }, 0);
+    return t.type === "income" ? sum + t.amount : sum - t.amount;
+}, 0);
 
   return (
     <div style={{ maxWidth: "600px", margin: "40px auto", fontFamily: "Arial" }}>
@@ -50,7 +60,7 @@ function App() {
       {/* Bilanz */}
       <div style={{
         padding: "20px",
-        background: balance >= 0 ? "#e6ffe6" : "#ffe6e6",
+        background: balance >= 0 ? "#e6ffe6" : "#ffe6e6",  
         borderRadius: "10px",
         marginBottom: "20px"
       }}>
@@ -67,8 +77,11 @@ function App() {
         </select>
 
         <input
-          type="number"
+          type="text"
+          inputMode="decimal"
           placeholder="Betrag in €"
+          min="0.01"
+          step="any"
           value={form.amount}
           onChange={e => setForm({...form, amount: e.target.value})}
           style={{ margin: "10px", padding: "5px" }}
@@ -103,11 +116,11 @@ function App() {
         <div key={t.id} style={{
           display: "flex", justifyContent: "space-between",
           padding: "10px", marginBottom: "8px",
-          background: t.type === "einnahme" ? "#e6ffe6" : "#ffe6e6",
+          background: t.type === "income" ? "#e6ffe6" : "#ffe6e6",
           borderRadius: "8px"
         }}>
           <span>{t.category} — {t.description}</span>
-          <span>{t.type === "einnahme" ? "+" : "-"}{t.amount} €</span>
+          <span>{t.type === "income" ? "+" : "-"}{t.amount} €</span>
           <button onClick={() => handleDelete(t.id)}
             style={{ background: "red", color: "white", border: "none", borderRadius: "5px", cursor: "pointer" }}>
             🗑️

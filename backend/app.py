@@ -49,27 +49,26 @@ def get_transactions():
 @app.route('/transactions', methods=['POST'])
 def add_transaction():
     data = request.json
+    print("DEBUG received data:", data) 
     
-    #--validation--
+#--validation--
     if not data:
-        return jsonify({'error': 'No data provided'}), 400
-    
+       return jsonify({'error': 'No data provided'}), 400
+
     if 'type' not in data or not data['type']:
-        return jsonify({'error': 'type is required'}), 400
-    
+       return jsonify({'error': 'type is required'}), 400
+
     if data['type'] not in VALID_TYPES:
-        return jsonify({'error': f'type must be one of {VALID_TYPES}'}), 400
-    
-    if 'amount' not in data or data['amount'] is None:
-        return jsonify({'error': 'amount is required'}), 400
-    
-    if not isinstance(data['amount'], (int, float)) or data['amount'] <= 0:
-        return jsonify({'error': 'amount must be a positive number'}), 400
-    
-    if 'catagory' not in data or not data['category']:
-        return jsonify({'error': 'category is required'}), 400
-    # --- end validation --
-    
+       return jsonify({'error': f'type must be one of {VALID_TYPES}'}), 400
+
+    try:
+       amount = float(data['amount'])
+       if amount <= 0:
+          return jsonify({'error': 'amount must be a positive number'}), 400
+    except (ValueError, TypeError):
+          return jsonify({'error': 'amount must be a number'}), 400
+
+# --- end validation --
     
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
@@ -78,7 +77,7 @@ def add_transaction():
         VALUES (?, ?, ?, ?, ?)
     ''', (
         data['type'],
-        data['amount'],
+        amount,
         data['category'],
         data.get('description', ''),
         datetime.now().strftime('%Y-%m-%d')
